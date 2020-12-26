@@ -1,0 +1,418 @@
+<!doctype html>
+<html>
+  <head>
+    <style type="text/css">
+      p {
+        max-width: 65ex;
+      }
+      method-group {
+        display: block;
+        font-weight: bold;
+        margin-top: 1em;
+      }
+
+      method {
+        margin-top: 0.5em;
+        display: block;
+      }
+
+      method-sig {
+      }
+
+      method-result {
+      }
+      
+      method-desc {
+      }
+
+      method-sig, method-result, cpp, k, t, v, f, pp {
+        font-family: monospace;
+      }
+
+      method-result::before {
+        content: '-> ';
+      }
+
+      k {
+        color: #777;
+        font-weight: bold;
+      }
+
+      t {
+        color: #333;
+        font-weight: normal;
+      }
+
+      v {
+        color: #204a87;
+        font-weight: bold;
+      }
+
+      f {
+        color: #4e9a06;
+        font-weight: bold;
+      }
+
+      pp {
+        font-weight: bold;
+      }
+      
+      o {
+        color: #000000;
+        font-family: italic;
+      }
+
+
+    </style>
+  </head>
+  <body>
+ 
+
+    <h1>Design Decisions</h1>
+    <p>
+      The purpose of the library is to have safe calculations, so unit mismatchs
+      result in compile errors. The library is not about storage management, so
+      no unit information is stored at runtime (leading to zero-overhead memory
+      usage in respect to unitless calculation).
+    </p>
+
+    <p>
+      The focus is on simplicity and minimalism, so the underlying storage type
+      is fixed as <t>double</t>. This avoids issues with <pp>cmath</pp>-function
+      naming like <f>round</f>, <f>roundf</f> and <f>roundl</f> etc. and keeps the
+      library small.
+    </p>
+
+    <p>
+      The scale is always the base SI unit scale, so you can't use e. g. millimetres as
+      scale, only metres ‒ no distinction between units and dimensions.
+    </p>
+
+    <p>
+      The is no ambiguous unit distinction, e. g. there is no distinction between gray
+      and sievert. Compile-time checking of mix-ups between them is out of the scope
+      of the library.
+    </p>
+
+    <p>
+      Only the SI system is supported. If you want retarded units, use another library :-)
+    </p>
+
+    <h1>Reference</h1>
+    <h2>Unit</h2>
+    <p>Header: <pp>#include "minisi/unit.h"</pp></p>
+
+    $TODO
+
+    <h2>Quantity</h2>
+    <p>Header: <pp>#include "minisi/quantity.h"</pp></p>
+
+    <cpp>
+      <k>template</k> &lt;<k>typename</k> <t>Unit</t>&gt;<br>
+      <k>class</k> <t>quantity_t</t>
+    </cpp>
+
+    <p>
+      <t>quantity_t</t> is the central class of library, describing a
+      quantity of a given unit.
+    </p>
+
+    <method-group>value access</method-group>
+    <p>
+      The underlying raw value can be accessed directly or a <t>quantity_t</t> can be constructed from a raw
+      value.  This is needed when crossing the boundary between unit-checked code and non-unit-checked code. Of course,
+      the caller is responsible to specify or handle the value in the correct unit.
+    </p>
+    <method>
+      <method-sig>
+        <k>static</k> <f>from_value</f>(<t>double</t> <v>value</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t> 
+      </method-result>
+      <method-desc>
+        constructs the <t>quantity_t</t> from a raw value in the quantities unit.
+      </method-desc>
+    </method>
+    <method>
+     <method-sig>
+       <f>value</f>() <k>const</k>
+     </method-sig>
+     <method-result>
+       <t>double</t>
+     </method-result>
+     <method-descr>
+       resturns the raw quantity value in the quantities unit.
+     </method-descr>
+    </method>
+
+    <method-group>comparison</method-group>
+
+    <p>
+      Operators <cpp>&lt;</cpp>, <cpp>&lt;=</cpp>, <cpp>==</cpp>, <cpp>!=</cpp>, <cpp>&gt;=</cpp> and <cpp>&gt;</cpp>
+      are provided to compare quantities having the same unit. Comparison between quantities with different units is not
+      supported, of course.
+    </p>
+
+    <method-group>arithmetic</method-group>
+    <p>
+      Arithmetic operators <cpp>+</cpp>, <cpp>-</cpp>, <cpp>*</cpp> and <cpp>/</cpp> are provided and work as should be
+      expected: addition and substraction is only possible between quantities of the same unit. Multiplication and
+      division yield a result type of the corresponding unit.
+    </p>
+    <p>
+      Multiplication and division is also supported with raw unit-less values.
+    </p>
+    <p>
+      Operators <cpp>+=</cpp>, <cpp>-=</cpp>, <cpp>*=</cpp> and <cpp>/=</cpp> are also provided. The <cpp>*=</cpp> and
+      </cpp>/=</cpp> operators are only supported with raw or dimensionless values as otherwise the resulting unit would
+      violate the unit of the assigned quantity.
+    </p>
+
+    <h2>Pre-Defined Units</h2>
+    <p>Header: <pp>#include "minisi/minisi.h"</pp></p>
+    $TODO
+
+    <h2>User-Defined Literals</h2>
+    <p>Header: <pp>#include "minisi/literals.h"</pp></p>
+    $TODO
+
+    <h2>I/O</h2>
+    <p>Header: <pp>#include "minisi/io.h"</pp></p>
+    $TODO
+
+    <h2>Mathematical Functions</h2>
+    <p>Header: <pp>#include "minisi/math.h"</pp></p>
+
+    <p>
+      The mathematical functions in the <pp>cmath</pp> header of the standard library are not unit-aware of
+      course. For a subset of these functions, wrappers are provided to use these functions with units. The functions
+      are listed below.
+    </p>
+
+    <p>
+      The template parameters are not listed on each function. <t>Unit</t>, <t>LhsUnit</t> and 
+      <t>RhsUnit</t> are template parameters which should refer to a <t>unit_t</t> type.
+      <v>Exp</v>, <v>ExpNum</v> and <v>ExpDen</v> are integer template parameters used for (fractional) exponents. 
+    </p>
+
+    <p>
+      The functions are not described in detail, for more detail see the documentation for the standard library
+      <pp>cmath</pp> header on the functions with the same name as here.
+    </p>
+
+    <method-group>basic operations</method-group>
+
+    <method>
+      <method-sig>
+        <f>abs</f>(<t>quantity_t</t>&lt;Unit&gt; <v>arg</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;<t>Unit</t>&gt; 
+      </method-result>
+    </method>
+
+    <method>
+      <method-sig>
+        <f>fmod</f>(<t>quantity_t</t>&lt;LhsUnit&gt; <v>lhs</v>, <t>quantity_t</t>&lt;<t>RhsUnit</t>&gt; <v>rhs</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;<o>…</o>&gt;
+      </method-result>
+    </method>
+
+    <method>
+      <method-sig>
+        <f>remainder</f>(<t>quantity_t</t>&lt;LhsUnit&gt; <v>lhs</v>, <t>quantity_t</t>&lt;<t>RhsUnit</t>&gt; <v>rhs</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;<o>…</o>&gt;
+      </method-result>
+    </method>
+
+    <method>
+      <method-sig>
+        <f>fma</f>(<t>quantity_t</t>&lt;<t>LhsUnit</t>&gt; <v>x</v>,
+                   <t>quantity_t</t>&lt;<t>RhsUnit</t>&gt; <v>y</v>,
+                   <t>quantity_t</t>&lt;unit_product_t&lt;<t>LhsUnit</t>, <t>RhsUnit</t>&gt;&gt; <v>z</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;unit_product_t&lt;<t>LhsUnit</t>, <t>RhsUnit</t>&gt;&gt;
+      </method-result>
+    </method>
+
+    <method-group>power functions</method-group>
+
+    <method>
+      <method-sig>
+        <f>pow</f>&lt;<v>Exp</v>&gt;(<t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>base</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;<o>…</o>&gt;
+      </method-result>
+    </method>
+
+    <method>
+      <method-sig>
+        <f>pow</f>&lt;<v>ExpNum</v>, <v>ExpDen</v>&gt;(<t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>base</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;<o>…</o>&gt;
+      </method-result>
+    </method>
+
+    <method>
+      <method-sig>
+        <f>sqrt</f>(<t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>arg</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;<o>…</o>&gt;
+      </method-result>
+    </method>
+
+    <method>
+      <method-sig>
+        <f>cbrt</f>(<t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>arg</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;<o>…</o>&gt;
+      </method-result>
+    </method>
+
+    <method>
+      <method-sig>
+        <f>hypot</f>(<t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>x</v>, <t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>y</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;<t>Unit</t>&gt;
+      </method-result>
+    </method>
+
+    <method>
+      <method-sig>
+        <f>hypot</f>(<t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>x</v>, 
+                     <t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>y</v>,
+                     <t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>z</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;<t>Unit</t>&gt;
+      </method-result>
+    </method>
+
+    <method-group>rounding functions</method-group>
+
+    <method>
+      <method-sig>
+        <f>ceil</f>(<t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>arg</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;<t>Unit</t>&gt;
+      </method-result>
+    </method>
+
+    <method>
+      <method-sig>
+        <f>floor</f>(<t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>arg</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;<t>Unit</t>&gt;
+      </method-result>
+    </method>
+
+    <method>
+      <method-sig>
+        <f>trunc</f>(<t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>arg</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;<t>Unit</t>&gt;
+      </method-result>
+    </method>
+
+    <method>
+      <method-sig>
+        <f>round</f>(<t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>arg</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;<t>Unit</t>&gt;
+      </method-result>
+    </method>
+
+    <method>
+      <method-sig>
+        <f>nearbyint</f>(<t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>arg</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;<t>Unit</t>&gt;
+      </method-result>
+    </method>
+
+    <method>
+      <method-sig>
+        <f>rint</f>(<t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>arg</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;<t>Unit</t>&gt;
+      </method-result>
+    </method>
+
+    <method-group>floating-point utility functions</method-group>
+
+    <method>
+      <method-sig>
+        <f>nextafter</f>(<t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>arg</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;<t>Unit</t>&gt;
+      </method-result>
+    </method>
+
+    <method>
+      <method-sig>
+        <f>copysign</f>(<t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>x</v>, <t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>y</v>)
+      </method-sig>
+      <method-result>
+        <t>quantity_t</t>&lt;<t>Unit</t>&gt;
+      </method-result>
+    </method>
+
+    <method-group>classification functions</method-group>
+
+    <method>
+      <method-sig>
+        <f>isfinite</f>(<t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>arg</v>)
+      </method-sig>
+      <method-result>
+        <t>bool</t>
+      </method-result>
+    </method>
+
+    <method>
+      <method-sig>
+        <f>isinf</f>(<t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>arg</v>)
+      </method-sig>
+      <method-result>
+        <t>bool</t>
+      </method-result>
+    </method>
+
+    <method>
+      <method-sig>
+        <f>isnan</f>(<t>quantity_t</t>&lt;<t>Unit</t>&gt; <v>arg</v>)
+      </method-sig>
+      <method-result>
+        <t>bool</t>
+      </method-result>
+    </method>
+
+    <method>
+      <method-sig>
+        <f>isnormal</f>(<t>quantity_t</t>&lt;<t>Unit<t>&gt; <v>arg</v>)
+
+      </method-sig>
+      <method-result>
+        <t>bool</t>
+      </method-result>
+    </method>
+
+  </body>
+</html>

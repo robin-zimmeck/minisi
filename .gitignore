@@ -1,0 +1,6 @@
+.*
+!.gitignore
+build
+debug
+release
+compile_commands.json
