@@ -77,6 +77,7 @@ using metrePerSecondCubed_t    = unit_t<-3,  1,  0,  0,  0,  0,  0>;
 
 using kilogramPerCubicMetre_t  = unit_t< 0, -3,  1,  0,  0,  0,  0>;
 using kilogramPerSquareMetre_t = unit_t< 0, -2,  1,  0,  0,  0,  0>;
+using kilogramPerMetre_t       = unit_t< 0, -1,  1,  0,  0,  0,  0>;
 using cubicMetrePerKilogram_t  = unit_t< 0,  3, -1,  0,  0,  0,  0>;
 using amperePerSquareMetre_t   = unit_t< 0, -2,  0,  1,  0,  0,  0>;
 using amperePerMetre_t         = unit_t< 0, -1,  0,  1,  0,  0,  0>;
@@ -121,6 +122,7 @@ using volume_t          = quantity_t<cubicMetre_t>;
 using velocity_t        = quantity_t<metrePerSecond_t>;
 using acceleration_t    = quantity_t<metrePerSecondSquared_t>;
 using jolt_t            = quantity_t<metrePerSecondCubed_t>;
+using massPerLength_t   = quantity_t<kilogramPerMetre_t>;
 
 // $TODO complete
 
