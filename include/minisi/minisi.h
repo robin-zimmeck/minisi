@@ -76,7 +76,7 @@ using metrePerSecondSquared_t  = unit_t<-2,  1,  0,  0,  0,  0,  0>;
 using metrePerSecondCubed_t    = unit_t<-3,  1,  0,  0,  0,  0,  0>;
 
 using kilogramPerCubicMetre_t  = unit_t< 0, -3,  1,  0,  0,  0,  0>;
-using kilogramPerSquareMetre_t = unit_t< 0,  2,  1,  0,  0,  0,  0>;
+using kilogramPerSquareMetre_t = unit_t< 0, -2,  1,  0,  0,  0,  0>;
 using cubicMetrePerKilogram_t  = unit_t< 0,  3, -1,  0,  0,  0,  0>;
 using amperePerSquareMetre_t   = unit_t< 0, -2,  0,  1,  0,  0,  0>;
 using amperePerMetre_t         = unit_t< 0, -1,  0,  1,  0,  0,  0>;
