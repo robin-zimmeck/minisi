@@ -49,4 +49,5 @@ BOOST_AUTO_TEST_CASE(literals_test)
   BOOST_CHECK_EQUAL( 9.81_mps², 9.81 * metre / (second * second) );
   BOOST_CHECK_EQUAL( 6.53_mps³, 6.53 * metre / second / second / second );
   BOOST_CHECK_EQUAL( 70.0_kmph, 70.0 * kilometre / hour );
+  BOOST_CHECK_EQUAL( 1.0_t, 1.0 * ton);
 }

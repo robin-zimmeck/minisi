@@ -161,5 +161,5 @@ static const auto katal = catalyticActivity_t::from_value( 1.0 );
 static const auto kilometre = length_t::from_value( 1000.0 );
 static const auto minute = duration_t::from_value( 60.0 );
 static const auto hour = duration_t::from_value( 3600.0 );
-
+static const auto ton = mass_t::from_value(1000.0);
 }

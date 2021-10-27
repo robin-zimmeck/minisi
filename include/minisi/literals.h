@@ -124,6 +124,13 @@ operator"" _kmph(long double value)
   return double( value ) * kilometre / hour;
 }
 
+inline
+mass_t
+operator"" _t(long double value)
+{
+  return double(value) * ton;
+}
+
 }
 
 // $TODO complete
