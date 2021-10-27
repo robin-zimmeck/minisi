@@ -32,6 +32,18 @@
 
 #include "unit.h"
 
+// detect c++20 feature check support and use this to allow operator<=> to be defaulted if possible
+#ifdef __has_cpp_attribute
+
+#if __has_cpp_attribute(__cpp_lib_three_way_comparison)
+#define MINISI_HAS_SPACESHIP
+#endif
+#endif
+
+#if defined(MINISI_HAS_SPACESHIP)
+#include <compare>
+#endif
+
 #include <type_traits>
 
 namespace minisi
@@ -77,12 +89,16 @@ public:
   quantity_t &operator/=(double);
 
   // comparison operators
+#if defined(MINISI_HAS_SPACESHIP)
+    auto operator<=>(const quantity_t&) const = default;
+#else
   bool operator== (quantity_t) const;
   bool operator!= (quantity_t) const;
   bool operator< (quantity_t) const;
   bool operator> (quantity_t) const;
   bool operator<= (quantity_t) const;
   bool operator>= (quantity_t) const;
+#endif
 
 private:
   quantity_t(double, int);
@@ -244,7 +260,7 @@ quantity_t<Unit>::operator/=(double other) -> quantity_t &
 
 // -------------------------------------------------------------------------------------------------
 // comparison operators
-
+#if !defined(MINISI_HAS_SPACESHIP)
 template<typename Unit>
 bool
 quantity_t<Unit>::operator== (quantity_t other) const
@@ -286,7 +302,7 @@ quantity_t<Unit>::operator>= (quantity_t other) const
 {
   return m_value >= other.m_value;
 }
-
+#endif
 // -------------------------------------------------------------------------------------------------
 // free operators
 
