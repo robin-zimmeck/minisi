@@ -131,6 +131,11 @@ operator"" _t(long double value)
   return double(value) * ton;
 }
 
+inline force_t operator"" _kN(long double value)
+{
+    return double(value) * kilonewton;
+}
+
 }
 
 // $TODO complete
